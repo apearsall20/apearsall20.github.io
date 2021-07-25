@@ -1,7 +1,5 @@
-function load_data(file) {
-	d3.csv(file);
+async function init() {
+	data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/by_state.csv");
 	console.log(data);
 	return data;
 }
-
-data = load_data("by_state.csv");
