@@ -1,5 +1,66 @@
+width = 600;
+height = 400;
+margin = 75;
+
 async function init() {
-	data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/US.csv");
-	console.log(data[0]);
-	return data;
+	home_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/ASPUS.csv");
+	console.log(home_data[0]);
+	console.log(home_data[0].DATE);
+	parseDate = d3.timeParse('%Y-%m-%d');
+	minTime = parseDate(home_data[0].DATE);
+	maxTime = parseDate(home_data[204].DATE);
+	
+	var x = d3.scaleTime()
+	.range([0, width])
+	.domain([minTime, maxTime]);
+
+	ymin = 0;
+	ymax = 403900;
+
+	var y = d3.scaleLinear()
+	.domain([ymin, ymax*1.05])
+	.range([height,0]);
+
+	console.log(ymax);
+
+	d3.select("svg").append("g")
+	.attr("transform","translate("+(50+margin)+","+margin+")")
+	.style("font-size",14)
+	.call(d3.axisLeft(y));
+
+	d3.select("svg").append("g")
+	.attr("transform","translate("+(50+margin)+","+(height+margin)+")")
+	.style("font-size",14)
+	.call(d3.axisBottom(x));
+
+	var line = d3.line()
+	.x(function(d) {return x(parseDate(d.DATE));})
+	.y(function(d) {return y(d.ASPUS);});
+
+	d3.select("svg")
+	.attr("width", width + 2*margin)
+	.attr("height", height + 2*margin)
+	.append("g")
+	.attr("transform", "translate("+(50+margin)+","+margin+")")
+	.selectAll("path").data(home_data).enter().append("path")
+	.datum(home_data)
+	.attr("d", line)
+	.attr("fill", "none")
+	.attr("stroke", "black")
+
+
+	d3.selectAll("svg")
+	.append("text")
+    .attr("class", "ylabel")
+    .attr("transform", "translate("+(margin-50)+","+(height/2+margin)+")")
+    .text("$");
+
+	d3.selectAll("svg")
+	.append("text")
+    .attr("class", "xlabel")
+    .attr("transform", "translate("+(margin+width/2)+","+(height+50+margin)+")")
+    .text("Date");
+
+
+
 }
