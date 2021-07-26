@@ -72,13 +72,17 @@ async function first() {
     d3.select('#third')
     .attr("class", "off")
 
+    d3.select('#f')
+    .attr("class", "show")
+
+    d3.select('#s')
+    .attr("class", "hide")
+
+    d3.select('#t')
+    .attr("class", "hide")
+
 }
 
-function first_button() {
-	first = document.getElementById('#first').className;
-    /*document.getElementById('#second').className = "off";
-    document.getElementById('#third').className = "off";
-*/}
 
 
 async function second() {
@@ -86,6 +90,8 @@ async function second() {
 
 	home_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/ASPUS.csv");
 	inf_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/Inflation.csv");
+	wage_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/wages.csv");
+	SP_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/SP500.csv");
 	parseDate = d3.timeParse('%Y-%m-%d');
 	console.log(home_data[0]);
 	minTime = parseDate(home_data[0].DATE);
@@ -118,6 +124,20 @@ async function second() {
 	.x(function(d) {return x(parseDate(d.DATE));})
 	.y(function(d) {return y(d.Cumulative_Change);});
 
+	var line2 = d3.line()
+	.x(function(d) {return x(parseDate(d.date));})
+	.y(function(d) {return y(d.Cumulative);});
+
+	var line3 = d3.line()
+	.x(function(d) {return x(parseDate(d.Year));})
+	.y(function(d) {return y(d.Cumulative_Wage);});
+
+
+	var line4 = d3.line()
+	.x(function(d) {return x(parseDate(d.Year));})
+	.y(function(d) {return y(d.Relative);});
+
+	console.log(SP_data);
 	d3.select("svg")
 	.attr("width", width + 2*margin)
 	.attr("height", height + 2*margin)
@@ -128,7 +148,25 @@ async function second() {
 	.attr("d", line)
 	.attr("fill", "none")
 	.attr("stroke", "black")
+	
 
+	d3.select("svg").append("path").datum(inf_data)
+	.attr("d", line2)
+	.attr("fill", "none")
+	.attr("stroke","green")
+	.attr("transform", "translate("+(50+margin)+","+margin+")")
+
+	d3.select("svg").append("path").datum(wage_data)
+	.attr("d", line3)
+	.attr("fill", "none")
+	.attr("stroke","red")
+	.attr("transform", "translate("+(50+margin)+","+margin+")")
+
+	d3.select("svg").append("path").datum(SP_data)
+	.attr("d", line4)
+	.attr("fill", "none")
+	.attr("stroke","blue")
+	.attr("transform", "translate("+(50+margin)+","+margin+")")
 
 	d3.selectAll("svg")
   	.append("text")
@@ -144,6 +182,26 @@ async function second() {
     .attr("class", "xlabel")
     .attr("transform", "translate("+(margin+width/2)+","+(height+50+margin)+")")
     .text("Date");
+
+
+    d3.select('#first')
+    .attr("class", "off")
+
+    d3.select('#second')
+    .attr("class", "active")
+
+    d3.select('#third')
+    .attr("class", "off")
+
+    d3.select('#f')
+    .attr("class", "hide")
+
+    d3.select('#s')
+    .attr("class", "show")
+
+    d3.select('#t')
+    .attr("class", "hide")
+
 }
 
 
@@ -152,9 +210,9 @@ async function second() {
 
 
 
+d3.select("#first").on("click",function() {first()});
 
-
-d3.select("#second").on("click",function(){second()});
+d3.select("#second").on("click",function() {second()});
 
 
 
