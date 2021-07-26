@@ -1,7 +1,7 @@
 <html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <link rel="stylesheet" type="text/css" href="main.css">
-<body onload='init()'>
+<body>
 	<h1> Historical Home Price Data </h1>
 
 	<div id="getitcentered">
@@ -9,15 +9,15 @@
 				It is well documented in the news that people in the younger generations are having increasing difficulty buying their first homes. Data shows that the median home price has gone up 6X in the past 50 years. Please hit the next button to see how that compares to wages or inflation.
 
 		</p>
-
+		<div id="viz">
 		<svg>
 
 		</svg>
-		<a href="#" class="previous">&laquo; Previous</a>
-		<a href="#" class="next">Next &raquo;</a>
+		</div>
+		<a href="#" class="active" id="first">1</a>
+		<a href="#" class="off" id="second">2</a>
+		<a href="#" class="off" id="third">3</a>
 
-		<a href="#" class="previous round">&#8249;</a>
-		<a href="#" class="next round">&#8250;</a>
 
 	</div>
 

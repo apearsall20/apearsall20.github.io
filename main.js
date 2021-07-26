@@ -2,10 +2,10 @@ width = 600;
 height = 400;
 margin = 75;
 
-async function init() {
+async function first() {
+	d3.select("svg").remove();
+
 	home_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/ASPUS.csv");
-	console.log(home_data[0]);
-	console.log(home_data[0].DATE);
 	parseDate = d3.timeParse('%Y-%m-%d');
 	minTime = parseDate(home_data[0].DATE);
 	maxTime = parseDate(home_data[204].DATE);
@@ -22,7 +22,7 @@ async function init() {
 	.range([height,0]);
 
 	console.log(ymax);
-
+	d3.select("#viz").append("svg");
 	d3.select("svg").append("g")
 	.attr("transform","translate("+(50+margin)+","+margin+")")
 	.style("font-size",14)
@@ -50,10 +50,13 @@ async function init() {
 
 
 	d3.selectAll("svg")
-	.append("text")
-    .attr("class", "ylabel")
-    .attr("transform", "translate("+(margin-50)+","+(height/2+margin)+")")
-    .text("$");
+  	.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", margin/3)
+      .attr("x", -height*2/3)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Median Home Price ($)");    ;
 
 	d3.selectAll("svg")
 	.append("text")
@@ -64,3 +67,18 @@ async function init() {
 
 
 }
+
+function first_button() {
+	first = document.getElementById('#first').className;
+    console.log(first);
+    /*document.getElementById('#second').className = "off";
+    document.getElementById('#third').className = "off";
+*/}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+	first();
+	first_button();
+});
+
+
