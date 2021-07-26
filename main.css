@@ -6,6 +6,8 @@ h1 {
 #getitcentered{
 	margin: auto;
 	text-align: center;
+	background-color: lightgrey;
+	width: 1000px;
 }
 
 .left_caption{
@@ -37,11 +39,7 @@ svg{
 	font-size: 1.4em;
 }
 
-div{
-	background-color: lightgrey;
-	width: 1000px;
 
-}
 
 .navb{
 	margin-left: 0px;
@@ -49,13 +47,20 @@ div{
 	display: inline-block;	
 }
 
-a {
+div.active {
   text-decoration: none;
   display: inline-block;
   padding: 8px 16px;
 }
 
-a:hover {
+
+div.off {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+div.off:hover {
   background-color: #ddd;
   color: black;
 }
