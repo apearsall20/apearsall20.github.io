@@ -101,12 +101,16 @@ div.off:hover {
     pointer-events: none;
 }
 
-.county-boundary {
-    fill: #aaa;
-    stroke: #fff;
-    stroke-width: .5px;
-}
-
-.county-boundary:hover, .state:hover {
-    fill: orange;
+.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 100px;					
+    height: 25;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: black;
+    color: white;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
 }

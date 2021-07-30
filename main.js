@@ -240,7 +240,6 @@ async function third() {
         .attr('class', 'background')
         .attr('height', height + 2*margin)
         .attr('width', width + 2*margin)
-        .on('click', clicked);
     
     Promise.resolve(d3.json('https://gist.githubusercontent.com/mbostock/4090846/raw/d534aba169207548a8a3d670c9c2cc719ff05c47/us.json'))
         .then(ready);
@@ -250,6 +249,10 @@ async function third() {
     min = 20547;
     state_max = 792627;
 
+
+	var tip = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0)
 
     var projection = d3.geoAlbersUsa()
        .translate([width /2 , height / 2])
@@ -271,20 +274,13 @@ async function third() {
         .attr('width', width + margin + margin)
         .attr('height', height + margin + margin)
 
-	county_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/by_county.csv");
-	state_data = await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/by_state.csv");
+    state2021 = d3.map();
 
+	await d3.csv("https://raw.githubusercontent.com/apearsall20/apearsall20.github.io/master/state2021.csv",function(d){state2021.set(d.FIPS, d)});
+	console.log(state2021);
 
 function ready(us) {
 
-    big_group.append("g")                
-        .attr("id", "counties")
-        .selectAll("path")
-        .data(topojson.feature(us, us.objects.counties).features)
-        .enter().append("path")
-        .attr("d", path)
-        .attr("class", "county-boundary")
-        .on("click", reset);
 
 	big_group.append("g")	
         .attr("id", "states")
@@ -293,7 +289,19 @@ function ready(us) {
         .enter().append("path")
         .attr("d", path)
         .attr("class", "state")
-        .on("click", clicked);
+        .attr("fill", function(d) { return state_color(d.median = state2021.get(d.id).Median)})
+        .on("mouseover", function(d) {		
+            tip.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            tip.html(state2021.get(d.id).state + " Median Price is $"  + Math.round(state2021.get(d.id).Median))
+            tip.style("left", (d3.event.pageX) + "px")		
+               .style("top", (d3.event.pageY - 28) + "px");})
+        .on("mouseout", function(d) {		
+            tip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
            
 	big_group.append("path")
     	.datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
@@ -303,40 +311,6 @@ function ready(us) {
 
 }
 
-function clicked(d) {
-    if (d3.select('.background').node() === this) return reset();
-
-    if (active.node() === this) return reset();
-
-    active.classed("active", false);
-    active = d3.select(this).classed("active", true);
-
-    var bounds = path.bounds(d),
-        dx = bounds[1][0] - bounds[0][0],
-        dy = bounds[1][1] - bounds[0][1],
-        x = (bounds[0][0] + bounds[1][0]) / 2,
-        y = (bounds[0][1] + bounds[1][1]) / 2,
-        scale = .9 / Math.max(dx / width, dy / height),
-        translate = [width / 2 - scale * x, height / 2 - scale * y];
-
-    big_group.transition()
-        .duration(750)
-        .style("stroke-width", 1.5 / scale + "px")
-        .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-}
-
-
-function reset() {
-    active.classed("active", false);
-    active = d3.select(null);
-
-    big_group.transition()
-        .delay(100)
-        .duration(750)
-        .style("stroke-width", "1.5px")
-        .attr('transform', 'translate('+margin+','+margin+')');
-
-}
 	parseDate = d3.timeParse('%Y-%m-%d');
 
 
